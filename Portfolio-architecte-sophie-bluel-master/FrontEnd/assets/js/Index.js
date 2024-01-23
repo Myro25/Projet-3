@@ -1,13 +1,9 @@
 document.addEventListener("DOMContentLoaded", function (event) {
-
     async function init() {
-
         let allworks = await fetchAllWork();
-
         DisplayAllWorks(allworks);
 
         let allfiltres = await fetchAllfiltres();
-        console.log(allworks)
         DisplayAllFiltres(allfiltres);
 
         filtrearray(allworks);
@@ -15,49 +11,39 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     init();
 
-
     function fetchAllWork() {
         return fetch("http://localhost:5678/api/works")
-            .then((response) => {
-                return response.json();
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+            .then((response) => response.json())
+            .catch((error) => console.log(error));
     }
 
     function fetchAllfiltres() {
         return fetch("http://localhost:5678/api/categories")
-            .then((response) => {
-                return response.json();
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+            .then((response) => response.json())
+            .catch((error) => console.log(error));
     }
 
     function DisplayAllWorks(allworks) {
-
-        let gallery = document.querySelector(".gallery")
-        gallery.innerHTML = " ";
+        let gallery = document.querySelector(".gallery");
+        gallery.innerHTML = "";
         for (const work of allworks) {
-            gallery.insertAdjacentHTML("beforeend",
-                `
-            <figure id="work-${work.id}">
-                <img src="${work.imageUrl}" alt="${work.title}">
-                <figcaption>${work.title}</figcaption>
-            </figure>
-            `);
+            gallery.insertAdjacentHTML(
+                "beforeend",
+                `<figure id="work-${work.id}">
+                    <img src="${work.imageUrl}" alt="${work.title}">
+                    <figcaption>${work.title}</figcaption>
+                </figure>`
+            );
         }
-
     }
 
     function DisplayAllFiltres(allfiltres) {
-        let filtres = document.querySelector(".filtres")
+        let filtres = document.querySelector(".filtres");
         for (const filtre of allfiltres) {
-            filtres.insertAdjacentHTML("beforeend",
-                `
-                <li id="${filtre.id}">${filtre.name}</li>`);
+            filtres.insertAdjacentHTML(
+                "beforeend",
+                `<li id="${filtre.id}">${filtre.name}</li>`
+            );
         }
     }
 
@@ -66,25 +52,25 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
         allfiltres.forEach((filtre) => {
             filtre.addEventListener("click", (event) => {
-                console.log(event)
                 let valueclicked = event.target.innerHTML;
-                console.log(valueclicked)
 
                 if (valueclicked === "Tous") {
                     DisplayAllWorks(allworks);
                 } else {
-                    let filterallinfo = allworks.filter(work => work.categoryId == event.target.id);
+                    let filterallinfo = allworks.filter(
+                        (work) => work.categoryId == event.target.id
+                    );
                     DisplayAllWorks(filterallinfo);
                 }
 
+                // Supprime la classe active de tous les autres boutons
+                allfiltres.forEach((otherFiltre) => {
+                    otherFiltre.classList.remove("active");
+                });
 
-
-            })
-        })
+                // Ajoute la classe active au bouton actuel
+                event.target.classList.add("active");
+            });
+        });
     }
-
-
-
-
-
-})
+});

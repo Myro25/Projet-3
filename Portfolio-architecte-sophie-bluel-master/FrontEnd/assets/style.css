@@ -202,6 +202,13 @@ h2 {
 	color: aliceblue;
 }
 
+.filtres li.active {
+	background-color: #1D6154;
+	color: aliceblue;
+}
+
+
+
 nav ul {
 	display: flex;
 	align-items: center;
