@@ -1,39 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-
-    function init() {
-
-        eventform()
-        mdpoublie()
-
-    }
-
     init();
 
-    function mdpoublie() {
-
-        document.getElementById("forgotPassword").addEventListener("click", function (event) {
-            event.preventDefault();
-
-            alert("Mot de passe oublié? Veuillez contacter l'administrateur du site.");
-        });
-    }
-
-    function eventform() {
-        let formlogin = document.querySelector("#logadmin")
-
-        formlogin.addEventListener("submit", async function (event) {
-            event.preventDefault();
-
-            let formData = { 'email': document.getElementById("Emaillog").value, 'password': document.getElementById("Motdepasse").value };
-
-            let result = await fetchinfo(formData);
-
-            StockToken(result);
-
-        });
-    }
-
-    async function fetchinfo(formData) {
+    //Connexion au site admin
+    function fetchinfo(formData) {
         return fetch("http://localhost:5678/api/users/login", {
             method: "POST",
             headers: {
@@ -42,21 +11,36 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify(formData)
         })
             .then((result) => {
-                return result.json();
+                return result;
             })
             .catch((error) => {
-                document.getElementById("message").textContent = "Identifiants invalides. Veuillez réessayer.";
+                console.log(error)
             })
     }
+    function init() {
+        document.querySelector("#logadmin").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            var Emaillog = document.getElementById("Emaillog").value;
+            var Motdepasse = document.getElementById("Motdepasse").value;
+            let formData = { 'email': Emaillog, 'password': Motdepasse };
+            let resultats = await fetchinfo(formData);
+            let token = await resultats.json();
+            window.localStorage.setItem("token", token.token);
+            if (resultats.status == 200) {
+                document.getElementById("message").textContent = "Connexion réussie!";
+                window.location.href = "./pageadmin.html";
+            } else {
+                document.getElementById("message").textContent = "Identifiants invalides. Veuillez réessayer.";
+            }
+        });
 
-    function StockToken(result) {
+        // Mot de passe oublié
 
-        document.getElementById("message").textContent = "Connexion réussie!";
-        window.localStorage.setItem("token", result.token);
+        document.getElementById("forgotPassword").addEventListener("click", function (event) {
+            event.preventDefault();
 
-        setTimeout(() => {
-            window.location.href = "./pageadmin.html";
-        }, "1000");
+            alert("Mot de passe oublié? Veuillez contacter l'administrateur du site.");
+        });
     }
 
-})
+});
