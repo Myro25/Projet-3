@@ -15,7 +15,7 @@ async function init() {
 
 init();
 
-
+// Cette fonction gère la déconnexion de l'utilisateur en supprimant le token du stockage local
 function Logout() {
     let logout = document.querySelector(".logout");
     logout.addEventListener("click", () => {
@@ -23,7 +23,7 @@ function Logout() {
         window.location.href = "./index.html";
     })
 }
-
+// Vérifie si l'utilisateur est connecté en vérifiant la présence d'un token dans le stockage local
 function ConnectedOrNotConnected() {
     let token = localStorage.getItem("token");
     if (token) {
@@ -33,7 +33,7 @@ function ConnectedOrNotConnected() {
     }
 }
 
-
+// Gère les événements liés à l'affichage des modales et à la navigation entre les étapes
 function listevent() {
     const modale1 = document.querySelector(".modale")
     const btnmodale = document.getElementById("modale1")
@@ -80,7 +80,7 @@ function listevent() {
         step1.style.display = "block";
     });
 }
-
+// pour récupérer les informations sur les œuvres
 function getallinfo() {
     return fetch('http://localhost:5678/api/works')
         .then((response) => {
@@ -91,7 +91,7 @@ function getallinfo() {
 
         })
 }
-
+// pour récupérer les catégories d'œuvres
 function fetchCategories() {
     return fetch("http://localhost:5678/api/categories")
         .then((response) => {
@@ -101,7 +101,7 @@ function fetchCategories() {
             console.log(error)
         })
 }
-
+// Affiche les catégories récupérées dans un élément
 function displayallcategorie(allcategorie) {
     let categorie = document.querySelector(".categorieselect");
 
@@ -115,7 +115,7 @@ function displayallcategorie(allcategorie) {
         );
     }
 }
-
+// Affiche les informations sur les œuvres récupérées dans des éléments HTML
 function displayallinfo(allinfo) {
     let gallery = document.querySelector(".gallery")
     let gallerymodal = document.querySelector(".gallery-modale")
